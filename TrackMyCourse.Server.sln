@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{138003E9-B80D-4DAA-B629-6D88D685A3D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.TrackMyCourse.Api", "01.TrackMyCourse.Api", "{558CCC5B-81A2-42CB-A134-3EC2CA7DCBF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.TrackMyCourse.Api.Test", "02.TrackMyCourse.Api.Test", "{F7637AC2-65E8-4EF6-B4EF-C470A59A3D32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackMyCourse.Api", "TrackMyCourse.Api\TrackMyCourse.Api.csproj", "{3B16127F-8324-43D9-9416-83281B0F9008}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3B16127F-8324-43D9-9416-83281B0F9008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B16127F-8324-43D9-9416-83281B0F9008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B16127F-8324-43D9-9416-83281B0F9008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B16127F-8324-43D9-9416-83281B0F9008}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{558CCC5B-81A2-42CB-A134-3EC2CA7DCBF5} = {138003E9-B80D-4DAA-B629-6D88D685A3D1}
+		{F7637AC2-65E8-4EF6-B4EF-C470A59A3D32} = {138003E9-B80D-4DAA-B629-6D88D685A3D1}
+		{3B16127F-8324-43D9-9416-83281B0F9008} = {558CCC5B-81A2-42CB-A134-3EC2CA7DCBF5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A44F685-68EB-422A-A3B6-40DA6DDC1030}
+	EndGlobalSection
+EndGlobal
