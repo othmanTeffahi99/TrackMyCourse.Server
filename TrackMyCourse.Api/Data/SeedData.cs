@@ -27,8 +27,9 @@ public static class SeedData
                 Name = "C#",
                 Description = "C# Course",
                 UpdatedAt = DateTimeOffset.UtcNow,
-                Progress = 10,
-                IsCompleted = false
+                Progress = 20,
+                IsCompleted = false,
+                IsFavorite = true
             },
             new Course()
             {
@@ -36,7 +37,7 @@ public static class SeedData
                 Name = "Java",
                 Description = "Java Course",
                 UpdatedAt = DateTimeOffset.UtcNow,
-                Progress = 10,
+                Progress = 30,
                 IsCompleted = false
             },
             new Course()

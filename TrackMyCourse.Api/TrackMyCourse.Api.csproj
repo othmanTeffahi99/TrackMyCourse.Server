@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
 	  <UserSecretsId>95178792-e3f3-4efb-93bb-3c1cf7b4d651</UserSecretsId>
+	  <AssemblyName>TrackMyCourseApi</AssemblyName>
+	  <RootNamespace>TrackMyCourseApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

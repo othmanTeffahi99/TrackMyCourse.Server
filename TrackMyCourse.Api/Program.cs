@@ -12,9 +12,13 @@ using TrackMyCourseApi.Services.DateTimeProvider;
 using TrackMyCourseApi.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors();
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("TrackMyCourseDb"));
+builder.Services.AddDbContext<AppDbContext>(opt => {
+    opt.UseInMemoryDatabase("TrackMyCourseDb").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); ;
+    opt.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
+      
+    }) ;
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
@@ -38,6 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseHttpsRedirection();
 
 //Map the endpoints

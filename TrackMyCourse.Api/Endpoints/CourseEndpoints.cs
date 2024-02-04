@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using System.Text.RegularExpressions;
+using AutoMapper;
 using TrackMyCourseApi.Dtos;
 using TrackMyCourseApi.Dtos.CourseDtos;
 using trackmycourseapi.models;
@@ -10,43 +12,64 @@ public static class CourseEndpoints
 {
     public static void MapCourseEndpoints(this WebApplication app)
     {
-        var courseGroupBuilder = app.MapGroup("api/course").AllowAnonymous();
-        courseGroupBuilder.MapGet("/", async (IRepository<Course> repository, IMapper mapper ) =>
+        var courseGroupBuilder = app.MapGroup("api/courses").AllowAnonymous();
+        
+        // Get All Courses Endpoint 
+        courseGroupBuilder.MapGet("/", async (IRepository<Course> repository, IMapper mapper) =>
         {
             var courses = await repository.GetAllAsync();
-            var coursesDto = mapper.Map<IEnumerable<CourseDto>>(courses);
+            var coursesDto = mapper.Map<IEnumerable<CourseReadDto>>(courses);
             return Results.Ok(coursesDto);
         });
-
-        courseGroupBuilder.MapGet("/{id}", async (IRepository<Course> repository,IMapper mapper, int id) =>
+ 
+        // Get Course by Id Endpoint
+        courseGroupBuilder.MapGet("/{id}", async (IRepository<Course> repository, IMapper mapper, int id) =>
         {
             var course = await repository.GetByIdAsync(id);
-            var courseDto = mapper.Map<CourseDto>(course);
+            var courseDto = mapper.Map<CourseReadDto>(course);
             return course is null ? Results.NotFound() : Results.Ok(courseDto);
         });
 
-        courseGroupBuilder.MapPost("/", async (IRepository<Course> repository,IMapper mapper, CourseCreateDto  courseCreateDto) =>
-        {
-            var course = mapper.Map<Course>(courseCreateDto);
-            var result = await repository.CreateAsync(course);
-            return Results.Created($"/courses/{result.Id}", result);
-        });
+        // Create Course Endpoint
+        courseGroupBuilder.MapPost("/",
+            async (IRepository<Course> repository, IMapper mapper, CourseCreateDto courseCreateDto) =>
+            {
+                var course = mapper.Map<Course>(courseCreateDto);
+                var result = await repository.CreateAsync(course);
+                await repository.SaveChangesAsync();
+                return Results.Created($"/courses/{result.Id}", result);
+            });
 
-        courseGroupBuilder.MapPut("/{id}", async (IRepository<Course> repository,IMapper mapper, int id, CourseDto courseDto) =>
-        {
-            var course = mapper.Map<Course>(courseDto);
-            //Todo: Check if the course exists
-             await repository.UpdateAsync(course);
-             
-             //TODO : Check if the course was updated
-             Results.Ok(course);
-        });
+        // Update Course Endpoint
+        courseGroupBuilder.MapPut("/{id}",
+            async (IRepository<Course> repository, IMapper mapper, int id, CourseUpdateDto courseUpdateDto) =>
+            {
+                var existingCourse = await repository.GetByIdAsync(id);
+                if (existingCourse is not null)
+                {
+                    var course = mapper.Map<Course>(courseUpdateDto);
+                    await repository.UpdateAsync(course);
+                    await repository.SaveChangesAsync();
+                    var courseReadDto = mapper.Map<CourseReadDto>(course);
+                    return Results.Ok(courseReadDto);
+                }
 
-        courseGroupBuilder.MapDelete("/{id}", async (IRepository<Course> repository, int id) =>
+                return Results.NotFound("The Course that you are trying to update not found.");
+            });
+
+        // Delete Course Endpoint
+        courseGroupBuilder.MapDelete("/{id}", async (IRepository<Course> repository, IMapper mapper, int id) =>
         {
-            //Todo: Check if the course exists
-            // await repository.DeleteAsync(course);
-           // Results.Ok(course);
+            var course = await repository.GetByIdAsync(id);
+            if (course is not null)
+            {
+                await repository.DeleteAsync(course);
+                await repository.SaveChangesAsync();
+                var courseReadDto = mapper.Map<CourseReadDto>(course);
+                return Results.Ok(courseReadDto);
+            }
+
+            return Results.NotFound("The Course that you are trying to delete not found.");
         });
     }
 }

@@ -8,7 +8,8 @@ public class Profile : AutoMapper.Profile
 {
     public Profile()
     {
-        CreateMap<Course, CourseDto>();
+        CreateMap<Course, CourseReadDto>();
         CreateMap<CourseCreateDto, Course>();
+        CreateMap<CourseUpdateDto, Course>();
     }
 }

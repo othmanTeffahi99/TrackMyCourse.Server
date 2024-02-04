@@ -12,12 +12,13 @@ public class RepositoriesBase<T>(AppDbContext appDbContext)  : IRepositoryBase<T
     
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-       return await appDbContext.Set<T>().ToListAsync(cancellationToken: cancellationToken);
+       return await appDbContext.Set<T>().AsNoTracking<T>().ToListAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await appDbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken: cancellationToken);    }
+        return await appDbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken: cancellationToken);
+    }
 
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
@@ -30,7 +31,8 @@ public class RepositoriesBase<T>(AppDbContext appDbContext)  : IRepositoryBase<T
     {
         await Task.Run( () =>
         {
-            appDbContext.Set<T>().Update(entity);
+            var updatedEntity = appDbContext.Set<T>().Update(entity);
+          
         }, cancellationToken);
     }
 
@@ -38,7 +40,7 @@ public class RepositoriesBase<T>(AppDbContext appDbContext)  : IRepositoryBase<T
     {
         await Task.Run( () =>
         {
-            appDbContext.Set<T>().Update(entity);
+            appDbContext.Set<T>().Remove(entity);
         }, cancellationToken);
     }
 
