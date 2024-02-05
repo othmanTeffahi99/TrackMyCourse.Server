@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using TrackMyCourseApi.Common.Authentication;
 using TrackMyCourseApi.Common.DateTimeProvider;
 using TrackMyCourseApi.Data;
@@ -33,6 +34,10 @@ builder.Services.RegisterAppValidatorContainer();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +46,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseHttpsRedirection();

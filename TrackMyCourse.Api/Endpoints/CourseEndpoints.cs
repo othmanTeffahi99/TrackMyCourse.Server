@@ -5,6 +5,7 @@ using TrackMyCourseApi.Dtos;
 using TrackMyCourseApi.Dtos.CourseDtos;
 using trackmycourseapi.models;
 using TrackMyCourseApi.Repositories.Interfaces;
+using FluentValidation;
 
 namespace TrackMyCourseApi.Endpoints;
 
@@ -32,9 +33,14 @@ public static class CourseEndpoints
 
         // Create Course Endpoint
         courseGroupBuilder.MapPost("/",
-            async (IRepository<Course> repository, IMapper mapper, CourseCreateDto courseCreateDto) =>
+            async (IRepository<Course> repository, IMapper mapper, IValidator<Course> validator, CourseCreateDto courseCreateDto) =>
             {
                 var course = mapper.Map<Course>(courseCreateDto);
+                var  validationResult = await validator.ValidateAsync(course);
+                if (!validationResult.IsValid)
+                {
+                    return Results.BadRequest(validationResult.Errors);
+                }
                 var result = await repository.CreateAsync(course);
                 await repository.SaveChangesAsync();
                 return Results.Created($"/courses/{result.Id}", result);
