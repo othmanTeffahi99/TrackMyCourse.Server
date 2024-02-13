@@ -1,4 +1,5 @@
-﻿using TrackMyCourseApi.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using TrackMyCourseApi.Enums;
 
 namespace trackmycourseapi.models;
 
@@ -10,7 +11,7 @@ public class Course
     public double? Progress { get; set; }
     public bool IsCompleted { get; set; }
     public bool IsFavorite { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public required DateTimeOffset UpdatedAt { get; set; }
     
     public CourseState State { get; set; }
 }

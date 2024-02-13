@@ -12,6 +12,8 @@ public class CourseValidator : AbstractValidator<Course>
         RuleFor(x => x.Name).NotNull();
         RuleFor(x => x.Progress).InclusiveBetween(0, 100);
         RuleFor(x => x.Description).Length(0, 200);
+        RuleFor(x => x.UpdatedAt).NotNull();
+        
         
     }
 }
