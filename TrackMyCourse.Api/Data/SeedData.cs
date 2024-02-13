@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using TrackMyCourseApi.Enums;
 using trackmycourseapi.models;
 
 namespace TrackMyCourseApi.Data;
@@ -29,7 +30,8 @@ public static class SeedData
                 UpdatedAt = DateTimeOffset.UtcNow,
                 Progress = 20,
                 IsCompleted = false,
-                IsFavorite = true
+                IsFavorite = true,
+                State = CourseState.InProgress
             },
             new Course()
             {
@@ -38,7 +40,8 @@ public static class SeedData
                 Description = "Java Course",
                 UpdatedAt = DateTimeOffset.UtcNow,
                 Progress = 30,
-                IsCompleted = false
+                IsCompleted = false,
+                State = CourseState.NotStarted
             },
             new Course()
             {
@@ -47,7 +50,8 @@ public static class SeedData
                 Description = "Python Course",
                 UpdatedAt = DateTimeOffset.UtcNow,
                 Progress = 10,
-                IsCompleted = false
+                IsCompleted = false,
+                State = CourseState.NotStarted
             }
         };
             

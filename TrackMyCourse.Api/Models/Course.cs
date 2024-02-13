@@ -1,4 +1,6 @@
-﻿namespace trackmycourseapi.models;
+﻿using TrackMyCourseApi.Enums;
+
+namespace trackmycourseapi.models;
 
 public class Course
 {
@@ -9,4 +11,6 @@ public class Course
     public bool IsCompleted { get; set; }
     public bool IsFavorite { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
+    
+    public CourseState State { get; set; }
 }

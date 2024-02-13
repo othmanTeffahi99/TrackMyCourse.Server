@@ -13,6 +13,8 @@ public static class CourseEndpoints
 {
     public static void MapCourseEndpoints(this WebApplication app)
     {
+        //TODO 1 : Add Authorization to the Endpoints
+        //TODO 2 : Add Memory Cache to the Endpoints
         var courseGroupBuilder = app.MapGroup("api/courses").AllowAnonymous();
         
         // Get All Courses Endpoint 
@@ -37,7 +39,7 @@ public static class CourseEndpoints
             {
                 var course = mapper.Map<Course>(courseCreateDto);
                 var  validationResult = await validator.ValidateAsync(course);
-                if (!validationResult.IsValid)
+                if (validationResult.IsValid is false)
                 {
                     return Results.BadRequest(validationResult.Errors);
                 }

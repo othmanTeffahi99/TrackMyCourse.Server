@@ -1,3 +1,6 @@
-﻿namespace TrackMyCourseApi.Dtos.CourseDtos;
+﻿using TrackMyCourseApi.Enums;
 
-public record CourseUpdateDto(int Id, string Name, string? Description, double? Progress, bool IsCompleted, bool IsFavorite, DateTimeOffset UpdatedAt);
+namespace TrackMyCourseApi.Dtos.CourseDtos;
+
+public record CourseUpdateDto(int Id, string Name, string? Description, double? Progress, bool IsCompleted,
+    bool IsFavorite, DateTimeOffset UpdatedAt, CourseState State);
