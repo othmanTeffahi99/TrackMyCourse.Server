@@ -27,7 +27,7 @@ public static class AuthenticationEndPoints
                     return Results.BadRequest("something incorrect in the request payload");
                 }
 
-                return Results.Ok(authenticationResult!.Token);
+                return Results.Ok(authenticationResult!. Token);
             });
 
         authGroupBuilder.MapPost("/register",

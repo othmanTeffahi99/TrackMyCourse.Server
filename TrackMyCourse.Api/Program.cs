@@ -46,30 +46,36 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSett
 builder.Services.RegisterAppValidatorContainer();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen(x =>
-// {
-//     // x.SwaggerDoc("v1", new OpenApiInfo {Title = "TrackMyCourseApi", Version = "v1"});
-//     var security = new OpenApiSecurityScheme
-//     {
-//         Name = HeaderNames.Authorization,
-//         Type = SecuritySchemeType.ApiKey,
-//         In = ParameterLocation.Header,
-//         Description = "JWT Authorization header",
-//         Reference = new OpenApiReference()
-//         {
-//             Id = JwtBearerDefaults.AuthenticationScheme,
-//             Type = ReferenceType.Schema
-//         }
-//     };
-//     
-//     x.AddSecurityDefinition(security.Reference.Id, security);
-//     x.AddSecurityRequirement(new OpenApiSecurityRequirement
-//     {
-//         {security, Array.Empty<string>()}
-//     });
-//     
-//     
-// });
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "TrackMyCourseWebApi", Version = "v1" });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+    
+    
+});
 
 builder.Services.AddSwaggerGen();
 
