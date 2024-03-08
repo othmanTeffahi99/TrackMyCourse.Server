@@ -13,7 +13,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOpts) : IJwtTokenGenerat
 
     public string GenerateToken(Guid userId, string firstName, string lastName)
     {
-        var signingCreadintials = new SigningCredentials(
+        var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSettings.SecretKey)),
             SecurityAlgorithms.HmacSha256Signature
         );
@@ -26,9 +26,9 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOpts) : IJwtTokenGenerat
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var securityToken = new JwtSecurityToken(issuer: JwtSettings.Issuer, expires: DateTime.Now.AddDays(
+        var securityToken = new JwtSecurityToken(issuer: JwtSettings.Issuer, expires: DateTime.Now.AddMinutes(
             jwtOpts.Value.ExpiryMinutes),audience: JwtSettings.Audience,
-            claims: claims, signingCredentials: signingCreadintials);
+            claims: claims, signingCredentials: signingCredentials);
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
     }

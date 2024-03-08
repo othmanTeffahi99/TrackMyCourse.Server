@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using trackmycourseapi.models;
+
+using TrackMyCourseApi.models;
 
 namespace TrackMyCourseApi.Validations;
 

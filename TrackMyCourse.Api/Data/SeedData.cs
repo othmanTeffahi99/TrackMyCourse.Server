@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
 using TrackMyCourseApi.Enums;
-using trackmycourseapi.models;
+
+using TrackMyCourseApi.models;
 
 namespace TrackMyCourseApi.Data;
 

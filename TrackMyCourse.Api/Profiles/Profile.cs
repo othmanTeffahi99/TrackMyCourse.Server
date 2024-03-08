@@ -1,6 +1,7 @@
 ﻿using TrackMyCourseApi.Dtos;
 using TrackMyCourseApi.Dtos.CourseDtos;
-using trackmycourseapi.models;
+using TrackMyCourseApi.models;
+
 
 namespace TrackMyCourseApi.Profiles;
 

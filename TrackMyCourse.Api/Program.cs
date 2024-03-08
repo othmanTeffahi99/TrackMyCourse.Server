@@ -1,15 +1,22 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using TrackMyCourseApi.Common.Authentication;
 using TrackMyCourseApi.Common.DateTimeProvider;
 using TrackMyCourseApi.Data;
 using TrackMyCourseApi.Endpoints;
+using TrackMyCourseApi.Repositories;
 using TrackMyCourseApi.Repositories.Interfaces;
 using TrackMyCourseApi.Repositories.RepositoryBase;
+using TrackMyCourseApi.Services.Authentication;
 using TrackMyCourseApi.Services.DateTimeProvider;
 using TrackMyCourseApi.Validations;
 using ILogger = Serilog.ILogger;
@@ -26,6 +33,10 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IJwtTokenGenerator, JwtTokenGenerator>();
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
+
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
 //Add option Pattern
@@ -35,11 +46,53 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSett
 builder.Services.RegisterAppValidatorContainer();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen(x =>
+// {
+//     // x.SwaggerDoc("v1", new OpenApiInfo {Title = "TrackMyCourseApi", Version = "v1"});
+//     var security = new OpenApiSecurityScheme
+//     {
+//         Name = HeaderNames.Authorization,
+//         Type = SecuritySchemeType.ApiKey,
+//         In = ParameterLocation.Header,
+//         Description = "JWT Authorization header",
+//         Reference = new OpenApiReference()
+//         {
+//             Id = JwtBearerDefaults.AuthenticationScheme,
+//             Type = ReferenceType.Schema
+//         }
+//     };
+//     
+//     x.AddSecurityDefinition(security.Reference.Id, security);
+//     x.AddSecurityRequirement(new OpenApiSecurityRequirement
+//     {
+//         {security, Array.Empty<string>()}
+//     });
+//     
+//     
+// });
+
 builder.Services.AddSwaggerGen();
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
+builder.Services.AddAuthentication().AddJwtBearer(x =>
+{
+    var jwtSettings = new JwtSettings();
+    builder.Configuration.Bind(JwtSettings.SETTINGS, jwtSettings);
+    x.TokenValidationParameters = new()
+    {
+       ValidIssuer = jwtSettings.Issuer,
+       ValidAudience = jwtSettings.Audience,
+       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+       ValidateIssuer = true,
+       ValidateAudience = true,
+       ValidateLifetime = true,
+       ValidateIssuerSigningKey = true
+       
+    };
+});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -58,13 +111,16 @@ app.UseHttpsRedirection();
 
 //Map the endpoints
 app.MapCourseEndpoints();
+app.MapAuthenticationEndpoints();
 
 app.MapGet("error", (ILogger logger, HttpContext httpcontext) =>
 {
     Exception? exception = httpcontext.Features.Get<IExceptionHandlerPathFeature>()?.Error;
     logger.Error(exception?.Message ?? "An error occurred.");
-    Results.Problem(exception?.Message, statusCode: 500);
-});
+    return Results.Problem(exception?.Message, statusCode: 500);
+}).AllowAnonymous();
+
+
 
 
 //Seed the data

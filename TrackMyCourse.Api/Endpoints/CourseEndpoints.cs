@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using TrackMyCourseApi.Dtos;
 using TrackMyCourseApi.Dtos.CourseDtos;
-using trackmycourseapi.models;
 using TrackMyCourseApi.Repositories.Interfaces;
 using FluentValidation;
+using TrackMyCourseApi.models;
 
 namespace TrackMyCourseApi.Endpoints;
 
@@ -15,7 +15,7 @@ public static class CourseEndpoints
     {
         //TODO 1 : Add Authorization to the Endpoints
         //TODO 2 : Add Memory Cache to the Endpoints
-        var courseGroupBuilder = app.MapGroup("api/courses").AllowAnonymous();
+        var courseGroupBuilder = app.MapGroup("api/courses").RequireAuthorization();
         
         // Get All Courses Endpoint 
         courseGroupBuilder.MapGet("/", async (IRepository<Course> repository, IMapper mapper) =>

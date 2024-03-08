@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using trackmycourseapi.models;
+using TrackMyCourseApi.models;
 
 namespace TrackMyCourseApi.Data;
 
@@ -14,8 +14,8 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Course>().Property(x => x.State).HasConversion<int>();
-            
     }
 
-    public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<User> Users { get; set; }
 }
