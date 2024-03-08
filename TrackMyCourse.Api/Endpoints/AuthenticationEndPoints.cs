@@ -8,8 +8,8 @@ public static class AuthenticationEndPoints
 {
     public static void MapAuthenticationEndpoints(this WebApplication app)
     {
-        var courseGroupBuilder = app.MapGroup("api").AllowAnonymous();
-        app.MapPost("/login",
+        var authGroupBuilder = app.MapGroup("/api").AllowAnonymous();
+        authGroupBuilder.MapPost("/login",
             async (LoginRequestDto? loginRequestDto, IAuthenticationService authenticationService,  Serilog.ILogger logger) =>
             {
                 if (loginRequestDto is null)
@@ -30,7 +30,7 @@ public static class AuthenticationEndPoints
                 return Results.Ok(authenticationResult!.Token);
             });
 
-        app.MapPost("/register",
+        authGroupBuilder.MapPost("/register",
             async (RegisterRequestDto? registerRequestDto, IAuthenticationService authenticationService,
                 Serilog.ILogger logger) =>
             {

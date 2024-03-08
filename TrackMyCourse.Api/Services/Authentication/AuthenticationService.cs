@@ -30,7 +30,7 @@ public class AuthenticationService
 
             // Create the user (generate Unique id ID)
 
-            logger.Information($"PasswordHash:{   passwordHash[0].ToString() } \n PasswordSalt: {Convert.ToBase64String(salt)}");
+            logger.Debug($"PasswordHash:{ Convert.ToBase64String(passwordHash)} \n PasswordSalt: {Convert.ToBase64String(salt)}");
 
             var newUser = await repository.CreateAsync(new User
             {
