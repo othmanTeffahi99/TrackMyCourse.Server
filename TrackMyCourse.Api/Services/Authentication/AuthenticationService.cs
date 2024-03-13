@@ -21,6 +21,10 @@ public class AuthenticationService
     public async Task<AuthenticationResult> RegisterAsync(string email, string password, string firstName,
         string lastName)
     {
+        ArgumentException.ThrowIfNullOrEmpty(email);
+        ArgumentException.ThrowIfNullOrEmpty(password);
+        ArgumentException.ThrowIfNullOrEmpty(firstName);
+        ArgumentException.ThrowIfNullOrEmpty(lastName);
         // Check if the user already exists
         var user = await userRepository.GetUserByEmailAsync(email);
 

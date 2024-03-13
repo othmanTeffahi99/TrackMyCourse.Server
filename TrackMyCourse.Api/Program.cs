@@ -1,16 +1,13 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using TrackMyCourseApi.Common.Authentication;
 using TrackMyCourseApi.Common.DateTimeProvider;
+using TrackMyCourseApi.Common.GlobalExceptionHandler;
 using TrackMyCourseApi.Data;
 using TrackMyCourseApi.Endpoints;
 using TrackMyCourseApi.Repositories;
@@ -77,10 +74,12 @@ builder.Services.AddSwaggerGen(opt =>
     
 });
 
-builder.Services.AddSwaggerGen();
 
+// builder.Services.AddSwaggerGen();
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddAuthentication().AddJwtBearer(x =>
 {
@@ -109,7 +108,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler("/error");
+app.UseExceptionHandler();
 app.UseSerilogRequestLogging();
 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
@@ -119,12 +118,7 @@ app.UseHttpsRedirection();
 app.MapCourseEndpoints();
 app.MapAuthenticationEndpoints();
 
-app.MapGet("error", (ILogger logger, HttpContext httpcontext) =>
-{
-    Exception? exception = httpcontext.Features.Get<IExceptionHandlerPathFeature>()?.Error;
-    logger.Error(exception?.Message ?? "An error occurred.");
-    return Results.Problem(exception?.Message, statusCode: 500);
-}).AllowAnonymous();
+
 
 
 
