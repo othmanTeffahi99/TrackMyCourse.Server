@@ -23,7 +23,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOpts) : IJwtTokenGenerat
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.GivenName, firstName),
             new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var securityToken = new JwtSecurityToken(issuer: JwtSettings.Issuer, expires: DateTime.Now.AddMinutes(

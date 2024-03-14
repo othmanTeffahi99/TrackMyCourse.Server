@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿
 using TrackMyCourseApi.Enums;
 
 using TrackMyCourseApi.models;
@@ -21,8 +21,7 @@ public static class SeedData
         
         if (context.Courses.Any()) return;
 
-        Course[] courses = new []
-        {
+        Course[] courses = {
             new Course()
             {
                 Id = 1,

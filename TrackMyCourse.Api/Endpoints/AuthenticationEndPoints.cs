@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using TrackMyCourseApi.Dtos.AuthenticationDtos;
 using TrackMyCourseApi.Services.Authentication;
 
@@ -21,13 +21,10 @@ public static class AuthenticationEndPoints
                 var authenticationResult =
                     await authenticationService.LoginAsync(loginRequestDto.Email, loginRequestDto.Password);
 
-                if (authenticationResult is null)
-                {
-                    logger.Warning($"something incorrect in the request payload");
-                    return Results.BadRequest("something incorrect in the request payload");
-                }
+                if (authenticationResult is not null) return Results.Ok(authenticationResult?.Token);
+                logger.Warning($"something incorrect in the request payload");
+                return Results.BadRequest("something incorrect in the request payload");
 
-                return Results.Ok(authenticationResult!. Token);
             });
 
         authGroupBuilder.MapPost("/register",

@@ -6,13 +6,13 @@ using TrackMyCourseApi.Repositories.Interfaces;
 
 namespace TrackMyCourseApi.Repositories.RepositoryBase;
 
-public class RepositoriesBase<T>(AppDbContext appDbContext)  : IRepositoryBase<T> where T : class 
+public class RepositoriesBase<T>(DbContext appDbContext)  : IRepositoryBase<T> where T : class 
 {
     
     
     public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-       return await appDbContext.Set<T>().AsNoTracking<T>().ToListAsync(cancellationToken: cancellationToken);
+       return await appDbContext.Set<T>().AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -31,7 +31,7 @@ public class RepositoriesBase<T>(AppDbContext appDbContext)  : IRepositoryBase<T
     {
         await Task.Run( () =>
         {
-            var updatedEntity = appDbContext.Set<T>().Update(entity);
+             appDbContext.Set<T>().Update(entity);
           
         }, cancellationToken);
     }

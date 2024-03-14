@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -16,7 +15,7 @@ using TrackMyCourseApi.Repositories.RepositoryBase;
 using TrackMyCourseApi.Services.Authentication;
 using TrackMyCourseApi.Services.DateTimeProvider;
 using TrackMyCourseApi.Validations;
-using ILogger = Serilog.ILogger;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors();
@@ -24,7 +23,6 @@ builder.Services.AddCors();
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseInMemoryDatabase("TrackMyCourseDb").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    ;
     opt.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
 });
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -85,7 +83,7 @@ builder.Services.AddAuthentication().AddJwtBearer(x =>
 {
     var jwtSettings = new JwtSettings();
     builder.Configuration.Bind(JwtSettings.SETTINGS, jwtSettings);
-    x.TokenValidationParameters = new()
+    x.TokenValidationParameters = new TokenValidationParameters
     {
        ValidIssuer = jwtSettings.Issuer,
        ValidAudience = jwtSettings.Audience,

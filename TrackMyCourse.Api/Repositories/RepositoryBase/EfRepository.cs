@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using TrackMyCourseApi.Data;
 using TrackMyCourseApi.Repositories.Interfaces;
 

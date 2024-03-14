@@ -1,3 +1,3 @@
 ﻿namespace TrackMyCourseApi.Dtos.AuthenticationDtos;
 
-public record LoginRequestDto(string Email, string Password);
+public sealed record LoginRequestDto(string Email, string Password);

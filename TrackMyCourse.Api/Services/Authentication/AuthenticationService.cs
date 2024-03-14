@@ -14,8 +14,8 @@ public class AuthenticationService
     IDateTimeProvider timeProvider, ILogger logger) : IAuthenticationService
 {
     private const int Keysize = 64;
-    const int Iterations = 35000;
-    HashAlgorithmName _hashAlgorithmName = HashAlgorithmName.SHA256;
+    private const int Iterations = 35000;
+    readonly HashAlgorithmName _hashAlgorithmName = HashAlgorithmName.SHA256;
 
 
     public async Task<AuthenticationResult> RegisterAsync(string email, string password, string firstName,

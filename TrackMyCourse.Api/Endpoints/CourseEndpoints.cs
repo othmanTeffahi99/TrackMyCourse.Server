@@ -1,7 +1,5 @@
-﻿using System.Net;
-using System.Text.RegularExpressions;
+﻿
 using AutoMapper;
-using TrackMyCourseApi.Dtos;
 using TrackMyCourseApi.Dtos.CourseDtos;
 using TrackMyCourseApi.Repositories.Interfaces;
 using FluentValidation;
@@ -53,16 +51,14 @@ public static class CourseEndpoints
             async (IRepository<Course> repository, IMapper mapper, int id, CourseUpdateDto courseUpdateDto) =>
             {
                 var existingCourse = await repository.GetByIdAsync(id);
-                if (existingCourse is not null)
-                {
-                    var course = mapper.Map<Course>(courseUpdateDto);
-                    await repository.UpdateAsync(course);
-                    await repository.SaveChangesAsync();
-                    var courseReadDto = mapper.Map<CourseReadDto>(course);
-                    return Results.Ok(courseReadDto);
-                }
+                if (existingCourse is null)
+                    return Results.NotFound("The Course that you are trying to update not found.");
+                var course = mapper.Map<Course>(courseUpdateDto);
+                await repository.UpdateAsync(course);
+                await repository.SaveChangesAsync();
+                var courseReadDto = mapper.Map<CourseReadDto>(course);
+                return Results.Ok(courseReadDto);
 
-                return Results.NotFound("The Course that you are trying to update not found.");
             });
 
         // Delete Course Endpoint
