@@ -4,6 +4,8 @@ using TrackMyCourseApi.Dtos.CourseDtos;
 using TrackMyCourseApi.Repositories.Interfaces;
 using FluentValidation;
 using TrackMyCourseApi.models;
+using Microsoft.Extensions.Caching.Distributed;
+using TrackMyCourseApi.Extensions;
 
 namespace TrackMyCourseApi.Endpoints;
 
@@ -24,9 +26,9 @@ public static class CourseEndpoints
         });
  
         // Get Course by Id Endpoint
-        courseGroupBuilder.MapGet("/{id}", async (IRepository<Course> repository, IMapper mapper, int id) =>
+        courseGroupBuilder.MapGet("/{id}", async (IRepository<Course> repository, IMapper mapper, IDistributedCache distributedCache , int id, CancellationToken cancellationToken) =>
         {
-            var course = await repository.GetByIdAsync(id);
+           var course =  await distributedCache.GetOrCreateAsync($"Courses:{id}", () => repository.GetByIdAsync(id), cancellationToken: cancellationToken);
             var courseDto = mapper.Map<CourseReadDto>(course);
             return course is null ? Results.NotFound() : Results.Ok(courseDto);
         });

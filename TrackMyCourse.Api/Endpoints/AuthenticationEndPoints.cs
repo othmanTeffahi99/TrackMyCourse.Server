@@ -10,7 +10,7 @@ public static class AuthenticationEndPoints
     {
         var authGroupBuilder = app.MapGroup("/api").AllowAnonymous();
         authGroupBuilder.MapPost("/login",
-            async (LoginRequestDto? loginRequestDto, IAuthenticationService authenticationService,  Serilog.ILogger logger) =>
+            async (LoginRequestDto? loginRequestDto, IAuthenticationService authenticationService,  Serilog.ILogger logger ) =>
             {
                 if (loginRequestDto is null)
                 {
